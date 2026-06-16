@@ -27,7 +27,7 @@ h1{
 
 div#card{
     display: none;
-    width: 450px;
+    max-width: 450px;
     background-color: rgb(248, 247, 242);
     margin: 20px 0px;
     padding: 10px;
