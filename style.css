@@ -76,3 +76,10 @@ footer a{
 footer a:hover{
     text-decoration: underline;
 }
+
+@media screen and (max-width: 445px){
+    div#status{
+        display: flex;
+        flex-direction: column;
+    }
+}
