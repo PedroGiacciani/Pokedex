@@ -5,13 +5,13 @@ let favoritos = JSON.parse(localStorage.getItem('bancoFavoritos')) || []
 
 pokeName.addEventListener('keydown', (event) => {
     if(event.key == 'Enter'){
-        procurarPokemon()
+        procurarPokemon(pokeName)
     }
 })
 
-btnEnvio.addEventListener('click', () => procurarPokemon())
+btnEnvio.addEventListener('click', () => procurarPokemon(pokeName))
 
-function procurarPokemon(){
+function procurarPokemon(pokeName){
     let campoRes = document.getElementById('card')
     campoRes.style.display = 'block'
 
@@ -28,9 +28,6 @@ function procurarPokemon(){
             return response.json()
         })
         .then(pokemon => {
-
-            console.log(pokemon)
-
             const tiposPokemon = {
                 normal: { cor: '#a8a77a', icon: "fa-regular fa-circle-dot"},
                 fire: {cor: '#EE8130', icon: "fa-solid fa-fire"},
@@ -77,11 +74,13 @@ function procurarPokemon(){
                     </div>
                     <p><i class="${icone1}"></i> <b>${pokemon.types.map(pos => pos.type.name).join(` - <i class="${icone2}"></i>`)}</b></p>
                 </div>
+                <div id="imagem">
+                    <img src="${pokemon.sprites.other['official-artwork'].front_default}" alt="imagem do ${pokemon.name}">
+                </div>
+                <div id="status">
+                    ${pokemon.stats.map(pos => `<p><b>${pos.stat.name}</b>: ${pos.base_stat}</p>`).join('')}
+                </div>
             `
-
-            campoRes.innerHTML += `<div id="imagem"><img src="${pokemon.sprites.other['official-artwork'].front_default}" alt="imagem do ${pokemon.name}"></div>`
-
-            campoRes.innerHTML += `<div id="status">${pokemon.stats.map(pos => `<p><b>${pos.stat.name}</b>: ${pos.base_stat}</p>`).join('')}</div>`
         })
         .catch(error => {
             campoRes.innerHTML = `<p>[ERRO]: ${error}</p>`
@@ -103,7 +102,7 @@ function favoritarPokemon(){
         btnEstrela.style.color = 'gold'
     }else{
         favoritos.splice(index, 1)
-        
+
         btnEstrela.classList.remove('fa-solid')
         btnEstrela.classList.add('fa-regular')
         btnEstrela.style.color = 'black'
