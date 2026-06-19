@@ -1,7 +1,9 @@
 let btnEnvio = document.getElementById('btn-enviar')
-let barraPesquisa = document.getElementById('inome-pokemon')
+let pokeName = document.getElementById('inome-pokemon')
 
-barraPesquisa.addEventListener('keydown', (event) => {
+let favoritos = JSON.parse(localStorage.getItem('bancoFavoritos')) || []
+
+pokeName.addEventListener('keydown', (event) => {
     if(event.key == 'Enter'){
         procurarPokemon()
     }
@@ -10,7 +12,6 @@ barraPesquisa.addEventListener('keydown', (event) => {
 btnEnvio.addEventListener('click', () => procurarPokemon())
 
 function procurarPokemon(){
-    let pokeName = document.getElementById('inome-pokemon')
     let campoRes = document.getElementById('card')
     campoRes.style.display = 'block'
 
@@ -64,13 +65,19 @@ function procurarPokemon(){
 
             const icone1 = tiposPokemon[tipo1].icon
             const icone2 = tiposPokemon[tipo2]?.icon
-
-            const fundoPokemon = document.querySelector('div#imagem')
-
+            const favoritado = favoritos.includes(pokeName.value.toLowerCase())
 
             campoRes.innerHTML = ``
 
-            campoRes.innerHTML += `<div id="inicio"><p><b>${pokemon.name}</b></p><p><i class="${icone1}"></i> <b>${pokemon.types.map(pos => pos.type.name).join(` - <i class="${icone2}"></i>`)}</b></p></div>`
+            campoRes.innerHTML += `
+                <div id="inicio">
+                    <div id="estrela">
+                        <p><b>${pokemon.name}</b></p>
+                        <i class="${favoritado? 'fa-solid fa-star': 'fa-regular fa-star'}" onclick="favoritarPokemon()" id="btn-star" style="color: ${favoritado? 'gold': 'black'}"></i>
+                    </div>
+                    <p><i class="${icone1}"></i> <b>${pokemon.types.map(pos => pos.type.name).join(` - <i class="${icone2}"></i>`)}</b></p>
+                </div>
+            `
 
             campoRes.innerHTML += `<div id="imagem"><img src="${pokemon.sprites.other['official-artwork'].front_default}" alt="imagem do ${pokemon.name}"></div>`
 
@@ -82,4 +89,25 @@ function procurarPokemon(){
     }
 
     pokeName.focus()
+}
+
+function favoritarPokemon(){
+    let btnEstrela = document.getElementById('btn-star')
+    let index = favoritos.indexOf(pokeName.value.toLowerCase())
+    
+    if(!favoritos.includes(pokeName.value)){
+        favoritos.push(pokeName.value.toLowerCase())
+        
+        btnEstrela.classList.remove('fa-regular')
+        btnEstrela.classList.add('fa-solid')
+        btnEstrela.style.color = 'gold'
+    }else{
+        favoritos.splice(index, 1)
+        
+        btnEstrela.classList.remove('fa-solid')
+        btnEstrela.classList.add('fa-regular')
+        btnEstrela.style.color = 'black'
+    }
+
+    localStorage.setItem('bancoFavoritos', JSON.stringify(favoritos))
 }
