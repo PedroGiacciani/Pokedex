@@ -1,5 +1,5 @@
 import { tiposPokemon } from "./tipos.js"
-import { favoritarPokemon } from "./script.js"
+import { favoritarPokemon } from "./main.js"
 
 export function criarCard(pokemon){
     let favoritos = JSON.parse(localStorage.getItem('bancoFavoritos')) || []
